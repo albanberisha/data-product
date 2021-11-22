@@ -23,7 +23,9 @@ else:
             for (dirpath, dirnames, filenames) in walk(path):
                 if(dirpath==path):
                     f.extend(filenames)
-            print(f)
+            if len(f)>=0:
+                   print(f"--Directory: \n {4 * ' '}{pathlib.Path(__file__).parent.resolve()}/sources/{date} \n is empty. \nProcess terminated with status error {error}. ")
+
         else:
             print(f"ERROR: Given directory: \n {4*' '}{pathlib.Path(__file__).parent.resolve()}/sources/{date} \n {2*' '}could not be found. \nProcess terminated with status error {error}. ")
     else:
