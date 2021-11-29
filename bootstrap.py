@@ -4,6 +4,7 @@ import pathlib
 from os import walk
 from Validation import Validation
 import os
+import pandas as pd
 #getting the last dir inside the mainDir
 def getLastDir(mainDir):
 
@@ -28,7 +29,8 @@ def firstPhaseIsRunned(pathDir):
         exists=True
     return exists
 
-def validateFile(filename,path,currentDir):
+#Validate header of dataset given in fileame
+def validateFileHeader(filename,path,currentDir):
     v = Validation()
     result=True
     print(f"-- Validation started for file {filename} inside path : {path}")
@@ -38,6 +40,27 @@ def validateFile(filename,path,currentDir):
         result=v.validateArtworks(filename,path,currentDir)
     #print(f"ERROR: Validation filed. Contents inside {filename} could not validate. ")
     return result
+
+def mergeAndValidateFiles(path,currentDir,listOfFiles):
+    v = Validation()
+    data_set=v.completeValidationProcess(path,currentDir,listOfFiles)
+    savedataSet(data_set,currentDir)
+
+#save dataset on specified folder
+def savedataSet(data_set,currentDir):
+    filename='Artworks_clean.csv'
+    pathToCreate = f"{pathlib.Path(__file__).parent.resolve()}/first_phase_output"
+    pathToCreate = os.path.join(pathToCreate, currentDir)
+    #Create the directory for output
+    os.mkdir(pathToCreate)
+    print(f"-- Directory {currentDir} created inside path:\n {4*' '} {pathlib.Path(__file__).parent.resolve()}\first_phase_output\ ")
+    df = pd.DataFrame(data_set)
+    df.to_csv(f"{pathToCreate}\{filename}", header=True, sep=',',index=False)
+    print(
+        f"-- Dataset {filename} has been saved inside path:\n {4 * ' '} {pathlib.Path(__file__).parent.resolve()}\first_phase_output\ {pathToCreate}")
+
+    print(f"FIRST PHASE HAS BEEN FINISHED SUCCESSFULLY. ")
+
 
 def firstPhase(currentDir):
     firstphasesource=["Artists.csv","Artworks.csv"]
@@ -70,18 +93,16 @@ def firstPhase(currentDir):
                 print(f"ERROR: Excepting files: \n {4 * ' '} {firstphasesource} inside:{pathlib.Path(__file__).parent.resolve()}/sources/{currentDir}  \n {1 * ' '} Missing: {couldNotFound} file")
             else:
                 print(f"-- Files {firstphasesource} inside {pathlib.Path(__file__).parent.resolve()}\sources\{currentDir} found")
+                validation=True
                 for file in f:
                     if file in firstphasesource:
-                        validation=validateFile(file,path,currentDir)
+                        validation=validateFileHeader(file,path,currentDir)
                     if not validation:
-                      #print(f"ERROR: File {file} inside {pathlib.Path(__file__).parent.resolve()}\sources\{currentDir} could not be validated")
+                      print(f"ERROR: File {file} inside {pathlib.Path(__file__).parent.resolve()}\sources\{currentDir} could not be validated")
                       break
-            print("break")
-            #pathToCreate = f"{pathlib.Path(__file__).parent.resolve()}/first_phase_output"
-            #pathToCreate = os.path.join(pathToCreate, currentDir)
-            # Create the directory for output
-            #os.mkdir(pathToCreate)
-            #print(f"-- Directory {currentDir} created inside path:\n {4*' '} {pathlib.Path(__file__).parent.resolve()}\irst_phase_output\{currentDir} directory")
+
+                if validation:
+                    mergeAndValidateFiles(path,currentDir,firstphasesource)
 
     else:
         print(f"-- Directory: \n {4 * ' '}{pathlib.Path(__file__).parent.resolve()}/sources/{currentDir} \n is empty. \nProcess terminated with status error {error}. ")
