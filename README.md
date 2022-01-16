@@ -12,6 +12,7 @@ pip install numpy
 pip install pandas
 pip install pandera
 pip install pip
+pip install seaborn
 ```
 Create new project, download the source files from  **[github project](https://github.com/albanberisha/data-product)** and unzip inside your project.
 This project uses folder 'sources' as source folder and inside are date formats as folders (ex 11/22/2021 as 11232021). To run the project u need to create new folder with upload date of files downloaded from **[github](https://github.com/MuseumofModernArt/collection)** (this link contains data sets). 
@@ -43,8 +44,33 @@ If you want to run specific **uploaded date** folder inside **sources** folder u
 >>  python bootstrap.py --first-phase yourdate
 #where yourdate is like: 11232021
 ```
+## Usage for SECOND PHASE
 
-After running the command inside your terminal,if there is not any error in the console, after some minutes you will find new folder created inside **first_phase_output** folder. There is your folder and inside it will be the result of this execution. The file will be named **Artworks_clean.csv** and it will be ready for next PHASE.
+
+To run the **Second Phase** run the following command inside terminal:
+
+```python
+>>  python data_product.py
+```
+
+This command will run the last uploaded date inside **first_phase_output** folder.
+
+If you want to run specific **uploaded date** folder inside **first_phase_output** folder use command:
+
+```python
+>>  python data_product.py --second-phase yourdate
+#where yourdate is like: 11232021
+```
+
+After running the command inside your terminal,if there is not any error in the console, after some minutes you will find new folder created inside **product_output** folder. There is your folder and inside it will be the result of this execution. The file will be named **Artworks_clean_prod.csv** and it will be ready for next PHASE (Visualization).
+
+
+## Usage for Third PHASE(Visualization)
+
+For visualization purposes we created  **Visualization.ipynb** file.
+
+
+
 ## Contributing
 This project has been created by:
  * Alban Berisha 
